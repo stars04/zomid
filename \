@@ -1,0 +1,66 @@
+use gdk4::Texture;
+use gtk::prelude::*;
+use gtk::{Application, ApplicationWindow, Box, Entry, Grid, Image, Label, Picture};
+
+fn main() {
+    let app = Application::builder().application_id("zomid").build();
+    app.connect_activate(build_ui);
+    app.run();
+}
+
+fn build_ui(app: &Application) {
+    //let plogo = Image::from_file("/images/zomboid.png");
+
+    let ptex = Texture::from_file("./images/zomboid.png");
+
+    let plogo = Image::from_file("/images/zomboid.png");
+
+    let src_instruct = Label::builder()
+        .label("Enter the path to your workshop directory")
+        .margin_top(5)
+        .margin_bottom(5)
+        .margin_start(5)
+        .margin_end(5)
+        .build();
+
+    let trg_instruct = Label::builder()
+        .label("Enter where you want your text file to be saved")
+        .margin_top(5)
+        .margin_bottom(5)
+        .margin_start(5)
+        .margin_end(5)
+        .build();
+
+    let enterbox = Entry::builder()
+        .margin_top(5)
+        .margin_bottom(5)
+        .margin_start(5)
+        .margin_end(5)
+        .build();
+
+    let grid_0 = Grid::new();
+
+    //grid_0.attach(&plogo, 1, 0, 1000, 1000);
+    grid_0.attach(&enterbox, 2, 1, 1, 1);
+    grid_0.attach(&src_instruct, 0, 1, 1, 1);
+    src_instruct.set_halign(gtk::Align::Start);
+    grid_0.attach(&trg_instruct, 0, 2, 1, 1);
+
+    let vbox = Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(5)
+        .build();
+
+    vbox.append(&plogo);
+    //vbox.append(&grid_0);
+
+    let window = ApplicationWindow::builder()
+        .title("ZoMID")
+        .application(app)
+        .child(&vbox)
+        .build();
+
+    window.show();
+}
+
+//Remake Entire Gui from Scratch with just GTK fuck REALM4!!!!
