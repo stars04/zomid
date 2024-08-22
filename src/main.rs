@@ -14,7 +14,6 @@ fn main() {
     let app = Application::builder().application_id("zomid").build();
     app.connect_activate(build_ui);
     app.run();
-    println!("fddfsf");
 }
 
 fn build_ui(app: &Application) {
@@ -152,7 +151,14 @@ fn build_ui(app: &Application) {
             let index = *drop_tracker.lock().unwrap();
             let path_buffs = Arc::clone(&path_buffs);
             let user_paths = &mut USER_PATHS.lock().unwrap();
-            user_paths[index] = enterbox.text().to_string();
+            user_paths[index] = match index {
+                0 => enterbox.text().to_string(),
+                1 => {
+                    let text = "/Zomid.txt";
+                    enterbox.text().to_string() + &text
+                }
+                _ => String::from("error with entrybox"),
+            };
             workshop_dest.set_label(&user_paths[0]);
             text_dest.set_label(&user_paths[1]);
             let path_buff_sel = {
@@ -284,7 +290,6 @@ fn build_ui(app: &Application) {
     //Below signal activates upon window visiblity USE FOR EXECUTION OF CORE LOGIC
     //NEED TO FIND TRIGGER FOR CLOSING APPLICATION UPON COMPLETETION
     progress.connect_visible_notify({
-        let app_ref = app.clone();
         let grid_1 = grid_1.clone();
         let button_2 = button_2.clone();
         let information = information.clone();
