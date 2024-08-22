@@ -1,7 +1,7 @@
 use std::fs;
 use std::fs::File;
 use std::io;
-use std::os::unix::prelude::FileExt;
+use std::io::Read;
 use std::path::Path;
 use std::str;
 
@@ -9,42 +9,42 @@ use std::str;
 //=== Function for getting ModIds =====
 //=====================================
 
-fn idcollect(source: String) -> io::Result<String> {
-    let text_file = File::open(source)?;
-    let mut strbuf = [0u8; 8];
-    let mut output: String = String::new();
-    let mut bytecount: u64 = 0;
+fn idscollect(source: String) -> io::Result<String> {
+    let mut text_file = File::open(source)?;
+    let mut strbuf = Vec::new();
+    let _loading_strbuf = text_file.read_to_end(&mut strbuf);
+    let mut content = match str::from_utf8(&strbuf) {
+        Ok(content) => content.to_string(),
+        Err(_err) => {
+            println!("Error reading bytes as utf8");
+            "Error".to_string()
+        }
+    };
+    loop {
+        if content.contains("id=") {
+            let offset = content.find('=').unwrap() + 1;
+            content.replace_range(..offset, "");
+        } else if !content.contains("id=") {
+            break;
+        }
+    }
 
     loop {
-        let _bytes_read = text_file.read_at(&mut strbuf, bytecount)?;
-        let container: String = str::from_utf8(&strbuf).unwrap().to_string();
-
-        if !output.is_empty() {
-            if container.contains("\n") {
-                let index = strbuf.iter().rposition(|x| *x == 10);
-                match index {
-                    Some(index) => {
-                        output.insert_str(output.len(), &container[..index]);
-                    }
-                    None => println!("Byte 10 representing newline characer not found"),
-                }
-                break;
-            } else {
-                output.push_str(&container);
-            }
+        if content.contains("\n") {
+            let offset = content.find('\n').unwrap();
+            let _ = content.split_off(offset);
         }
 
-        if container.contains("id=") {
-            let mut tempcont = container;
-            let offset = tempcont.find('=').unwrap();
-            tempcont.replace_range(..offset, "");
-            output = tempcont.to_string();
-        } else {
-            println!("still searching for line containing 'id='")
+        if content.contains("\r") {
+            let offset = content.find('\r').unwrap();
+            let _ = content.split_off(offset);
         }
-        bytecount += 8;
+
+        if !content.contains("\n") || !content.contains("\r") {
+            break;
+        }
     }
-    return Ok(output);
+    return Ok(content);
 }
 
 //=====================================
@@ -88,7 +88,7 @@ fn modidpathcollecter(source: Vec<String>) -> std::io::Result<Vec<String>> {
     let mut modinfos: Vec<String> = Vec::new();
 
     for val in source {
-        collect_modids(&Path::new(&val), &mut modinfos);
+        let _ = collect_modids(&Path::new(&val), &mut modinfos);
     }
     return Ok(modinfos);
 }
@@ -101,7 +101,7 @@ fn collect_modids(path: &Path, modinfos: &mut Vec<String>) -> std::io::Result<()
             if path.to_str().unwrap().contains("mod.info") {
                 modinfos.push(path.to_str().unwrap().to_string());
             } else if path.is_dir() {
-                collect_modids(&path, modinfos);
+                let _ = collect_modids(&path, modinfos);
             }
         }
     }
