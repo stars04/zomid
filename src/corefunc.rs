@@ -9,7 +9,7 @@ use std::str;
 //=== Function for getting ModIds =====
 //=====================================
 
-fn idscollect(source: String) -> io::Result<String> {
+pub fn idscollect(source: String) -> io::Result<String> {
     let mut text_file = File::open(source)?;
     let mut strbuf = Vec::new();
     let _loading_strbuf = text_file.read_to_end(&mut strbuf);
@@ -51,7 +51,7 @@ fn idscollect(source: String) -> io::Result<String> {
 //== Function for getting Mod Paths ===
 //=====================================
 
-fn pathcollect(source: &str) -> io::Result<Vec<String>> {
+pub fn pathcollect(source: &str) -> io::Result<Vec<String>> {
     let mut paths: Vec<String> = Vec::new();
     for entry in fs::read_dir(source)? {
         let dir = entry?;
@@ -65,7 +65,7 @@ fn pathcollect(source: &str) -> io::Result<Vec<String>> {
 //=== Function for getting workshop ids =====
 //===========================================
 
-fn workidbuild(source: &str) -> io::Result<Vec<String>> {
+pub fn workidbuild(source: &str) -> io::Result<Vec<String>> {
     let mut workids: Vec<String> = Vec::new();
     for entry in fs::read_dir(source)? {
         let dir = entry?;
@@ -75,7 +75,13 @@ fn workidbuild(source: &str) -> io::Result<Vec<String>> {
             .unwrap()
             .to_string()
             .replace(&source, "");
-        workids.push(wid);
+        if wid.contains("/") {
+            workids.push(wid.replace("/", ""));
+        }
+
+        if wid.contains("\\") {
+            workids.push(wid.replace("\\", ""));
+        }
     }
     return Ok(workids);
 }
@@ -84,7 +90,7 @@ fn workidbuild(source: &str) -> io::Result<Vec<String>> {
 //=== Functions for recursively locating mod.info directories =====
 //=================================================================
 
-fn modidpathcollecter(source: Vec<String>) -> std::io::Result<Vec<String>> {
+pub fn modidpathcollecter(source: Vec<String>) -> std::io::Result<Vec<String>> {
     let mut modinfos: Vec<String> = Vec::new();
 
     for val in source {
@@ -93,7 +99,7 @@ fn modidpathcollecter(source: Vec<String>) -> std::io::Result<Vec<String>> {
     return Ok(modinfos);
 }
 
-fn collect_modids(path: &Path, modinfos: &mut Vec<String>) -> std::io::Result<()> {
+pub fn collect_modids(path: &Path, modinfos: &mut Vec<String>) -> std::io::Result<()> {
     if !path.is_file() {
         for entry in fs::read_dir(&path)? {
             let entry = entry?;
@@ -112,7 +118,7 @@ fn collect_modids(path: &Path, modinfos: &mut Vec<String>) -> std::io::Result<()
 //=== Functions for recursively locating map names and collecting them =====
 //==========================================================================
 
-fn mapnamecollect(source: Vec<String>) -> std::io::Result<Vec<String>> {
+pub fn mapnamecollect(source: Vec<String>) -> std::io::Result<Vec<String>> {
     let mut mapnames: Vec<String> = Vec::new();
 
     for val in source {
@@ -122,7 +128,7 @@ fn mapnamecollect(source: Vec<String>) -> std::io::Result<Vec<String>> {
     return Ok(mapnames);
 }
 
-fn collect_mapnames(path: &Path, mapnames: &mut Vec<String>) -> std::io::Result<()> {
+pub fn collect_mapnames(path: &Path, mapnames: &mut Vec<String>) -> std::io::Result<()> {
     if path.is_dir() {
         for entry in fs::read_dir(path)? {
             let entry = entry?;

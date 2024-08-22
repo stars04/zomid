@@ -1,17 +1,14 @@
 mod corefunc;
-
 use gdk4::Texture;
 use gtk::prelude::*;
 use gtk::{
     Application, ApplicationWindow, Box, Button, CheckButton, DropDown, Entry, EntryBuffer, Grid,
     Label, Picture,
 };
+use std::fs;
 use std::sync::{Arc, Mutex};
 //Global variable for storing paths entered by user in gui element
 static USER_PATHS: Mutex<[String; 2]> = Mutex::new([String::new(), String::new()]);
-
-static LOADED_STRINGS: Mutex<[String; 3]> =
-    Mutex::new([String::new(), String::new(), String::new()]);
 
 fn main() {
     let app = Application::builder().application_id("zomid").build();
@@ -85,7 +82,9 @@ fn build_ui(app: &Application) {
 
     let pathselect = DropDown::from_strings(&["Workshop Directory", "Text File Output  "]);
 
-    let button_1 = Button::with_label("Submit");
+    let button_1 = Button::with_label("Submit"); //Attach trigger to submit button
+
+    let button_2 = Button::with_label("Close");
 
     let path_buffs = Arc::new(Mutex::new(vec![
         EntryBuffer::new(None::<String>),
@@ -166,6 +165,13 @@ fn build_ui(app: &Application) {
         }
     });
 
+    button_2.connect_clicked({
+        let app_ref = app.clone();
+        move |_button_2| {
+            app_ref.quit();
+        }
+    });
+
     //=======================================
     //=   Beginning to build the grid     ===
     //=======================================
@@ -214,6 +220,8 @@ fn build_ui(app: &Application) {
 
     vbox.append(&grid_0);
 
+    pbox.append(&grid_1);
+
     let window = ApplicationWindow::builder()
         .title("ZoMID")
         .application(app)
@@ -253,7 +261,6 @@ fn build_ui(app: &Application) {
     work_confirm.connect_toggled({
         let window = window.clone();
         let progress = progress.clone();
-        window.show();
         let check_tracker = Arc::clone(&mut check_tracker);
         let is_ready = Arc::clone(&mut is_ready);
         move |_work_confirm| {
@@ -276,7 +283,48 @@ fn build_ui(app: &Application) {
 
     //Below signal activates upon window visiblity USE FOR EXECUTION OF CORE LOGIC
     //NEED TO FIND TRIGGER FOR CLOSING APPLICATION UPON COMPLETETION
-    progress.connect_visible_notify(|_progress| {
-        println!("We have shown the window!");
+    progress.connect_visible_notify({
+        let app_ref = app.clone();
+        let grid_1 = grid_1.clone();
+        let button_2 = button_2.clone();
+        let information = information.clone();
+        move |_progress| {
+            let mut complete_text: String = String::new();
+            let user_paths: &[String; 2] = &mut USER_PATHS.lock().unwrap();
+            let sourcevec: Vec<String> = corefunc::pathcollect(&user_paths[0]).unwrap();
+            let idvec: Vec<String> = corefunc::workidbuild(&user_paths[0]).unwrap();
+            let modidsvec: Vec<String> = corefunc::modidpathcollecter(sourcevec.clone()).unwrap();
+            let mapnamevec: Vec<String> = corefunc::mapnamecollect(sourcevec.clone()).unwrap();
+            information.set_label("Processing your request... [\\]");
+            complete_text.push_str("Here are the needed ids for your installed mods! \n\n");
+
+            information.set_label("Processing your request... [|]");
+            for workshopid in idvec {
+                complete_text.push_str(&workshopid);
+                complete_text.push_str(";");
+            }
+
+            information.set_label("Processing your request... [/]");
+            complete_text.push_str("\n\n");
+
+            for modinfo in modidsvec {
+                complete_text.push_str(&corefunc::idscollect(modinfo.clone()).unwrap());
+                complete_text.push_str(";");
+            }
+
+            information.set_label("Processing your request... [-]");
+            complete_text.push_str("\n\n");
+
+            for names in mapnamevec {
+                complete_text.push_str(&names);
+                complete_text.push_str(";");
+            }
+
+            information.set_label("Processing your request... [\\]");
+            let _ = fs::write(user_paths[1].clone(), complete_text);
+
+            information.set_label("Your text file is created! click the button to quit! [✔ ]");
+            grid_1.attach(&button_2, 4, 1, 1, 1);
+        }
     });
 }
