@@ -144,6 +144,36 @@ fn build_ui(app: &Application) {
         }
     });
 
+    button_1.connect_clicked({
+        let workshop_dest = workshop_dest.clone();
+        let text_dest = text_dest.clone();
+        let enterbox = enterbox.clone();
+        let drop_tracker = drop_tracker.clone();
+        let path_buffs = path_buffs.clone();
+        move |_button_1| {
+            let index = *drop_tracker.lock().unwrap();
+            let path_buffs = Arc::clone(&path_buffs);
+            let user_paths = &mut USER_PATHS.lock().unwrap();
+            user_paths[index] = match index {
+                0 => enterbox.text().to_string(),
+                1 => {
+                    let text = "/Zomid.txt";
+                    enterbox.text().to_string() + &text
+                }
+                _ => String::from("error with entrybox"),
+            };
+            workshop_dest.set_label(&user_paths[0]);
+            text_dest.set_label(&user_paths[1]);
+            let path_buff_sel = {
+                let _path_buffs = path_buffs.lock().unwrap();
+                match index {
+                    _ => EntryBuffer::new(None::<String>),
+                }
+            };
+            enterbox.set_buffer(&path_buff_sel);
+        }
+    });
+
     enterbox.connect_activate({
         let workshop_dest = workshop_dest.clone();
         let text_dest = text_dest.clone();
@@ -288,7 +318,6 @@ fn build_ui(app: &Application) {
     });
 
     //Below signal activates upon window visiblity USE FOR EXECUTION OF CORE LOGIC
-    //NEED TO FIND TRIGGER FOR CLOSING APPLICATION UPON COMPLETETION
     progress.connect_visible_notify({
         let grid_1 = grid_1.clone();
         let button_2 = button_2.clone();

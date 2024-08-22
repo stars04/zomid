@@ -152,7 +152,3 @@ pub fn collect_mapnames(path: &Path, mapnames: &mut Vec<String>) -> std::io::Res
     }
     return Ok(());
 }
-
-//=================================================================================================
-//=== Functions for creating and writing to text file that contains all collected information =====
-//=================================================================================================
