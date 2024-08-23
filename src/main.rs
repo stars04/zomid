@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 mod corefunc;
 use gdk4::Texture;
 use gtk::prelude::*;
