@@ -81,6 +81,8 @@ fn build_ui(app: &Application) {
 
     let pathselect = DropDown::from_strings(&["Workshop Directory", "Text File Output  "]);
 
+    let button_0 = Button::with_label("Exit");
+
     let button_1 = Button::with_label("Submit"); //Attach trigger to submit button
 
     let button_2 = Button::with_label("Close");
@@ -144,6 +146,13 @@ fn build_ui(app: &Application) {
         }
     });
 
+    button_0.connect_clicked({
+        let app_ref = app.clone();
+        move |_button_0| {
+            app_ref.quit();
+        }
+    });
+
     button_1.connect_clicked({
         let workshop_dest = workshop_dest.clone();
         let text_dest = text_dest.clone();
@@ -174,6 +183,13 @@ fn build_ui(app: &Application) {
         }
     });
 
+    button_2.connect_clicked({
+        let app_ref = app.clone();
+        move |_button_2| {
+            app_ref.quit();
+        }
+    });
+
     enterbox.connect_activate({
         let workshop_dest = workshop_dest.clone();
         let text_dest = text_dest.clone();
@@ -201,20 +217,14 @@ fn build_ui(app: &Application) {
         }
     });
 
-    button_2.connect_clicked({
-        let app_ref = app.clone();
-        move |_button_2| {
-            app_ref.quit();
-        }
-    });
-
     //=======================================
     //=   Beginning to build the grid     ===
     //=======================================
 
     let grid_0 = Grid::new();
 
-    grid_0.attach(&plogo, 1, 0, 3, 3);
+    grid_0.attach(&plogo, 1, 1, 1, 1);
+    grid_0.attach(&button_0, 4, 0, 1, 1);
     grid_0.attach(&instructs, 1, 3, 1, 1);
     instructs.set_xalign(0.0);
     grid_0.attach(&enterbox, 1, 4, 3, 1);
@@ -270,7 +280,10 @@ fn build_ui(app: &Application) {
         .child(&pbox)
         .build();
 
+    window.set_deletable(false);
+
     window.set_visible(true);
+
     text_confirm.connect_toggled({
         let window = window.clone();
         let progress = progress.clone();
@@ -288,7 +301,7 @@ fn build_ui(app: &Application) {
                 let val = true;
                 println!("USER IS READY TO EXECUTE!, val => {:?}", val);
                 *ready_check = val;
-                window.close();
+                window.set_visible(false);
                 progress.set_visible(true);
             }
         }
@@ -311,7 +324,7 @@ fn build_ui(app: &Application) {
                 let val = true;
                 println!("USER IS READY TO EXECUTE!, val => {:?}", val);
                 *ready_check = val;
-                window.close();
+                window.set_visible(false);
                 progress.set_visible(true);
             }
         }
