@@ -8,7 +8,7 @@ use std::str;
 //=====================================
 //=== Function for getting ModIds =====
 //=====================================
-
+//hello world
 pub fn idscollect(source: String) -> io::Result<String> {
     let mut text_file = File::open(source)?;
     let mut strbuf = Vec::new();
@@ -144,8 +144,14 @@ pub fn collect_mapnames(path: &Path, mapnames: &mut Vec<String>) -> std::io::Res
                         let sub_entry = sub_entry?;
                         let sub_path = sub_entry.path();
                         if sub_path.is_dir() {
-                            mapnames
-                                .push(sub_path.to_str().unwrap().to_string().replace(&place, ""));
+                            if sub_path.to_str().unwrap().contains("\\") {
+                                let place: String = place.replace("/", "\\");
+                                mapnames.push(sub_path.to_str().unwrap().to_string().replace(&place, ""));
+                            }
+                            else if !sub_path.to_str().unwrap().contains("\\") {
+                                mapnames
+                                    .push(sub_path.to_str().unwrap().to_string().replace(&place, ""));
+                            }
                         }
                     }
                 } else {
