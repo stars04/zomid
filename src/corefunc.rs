@@ -134,6 +134,10 @@ pub fn collect_mapnames(path: &Path, mapnames: &mut Vec<String>) -> std::io::Res
             let entry = entry?;
             let path = entry.path();
             if path.is_dir() {
+                println!(
+                    "This is path.to_str().unwrap().contians('maps') ==> {:?}",
+                    path.to_str().unwrap().to_string() + "/"
+                );
                 if path.to_str().unwrap().contains("maps") {
                     for sub_entry in fs::read_dir(&path)? {
                         let place: String = path.to_str().unwrap().to_string() + "/";
