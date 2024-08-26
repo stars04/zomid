@@ -5,7 +5,7 @@ use gdk4::Texture;
 use gtk::prelude::*;
 use gtk::{
     Application, ApplicationWindow, Box, Button, CheckButton, DropDown, Entry, EntryBuffer, Grid,
-    Label, Picture,
+    Label, Picture, CssProvider, StyleContext,
 };
 use std::fs;
 use std::sync::{Arc, Mutex};
@@ -19,6 +19,7 @@ fn main() {
 }
 
 fn build_ui(app: &Application) {
+    //Font Information
     //keeps track of which dropdown selection is active
     let drop_tracker = Arc::new(Mutex::new(0));
     //keeps track of the state of the checkboxes
@@ -44,6 +45,7 @@ fn build_ui(app: &Application) {
         .margin_start(5)
         .margin_end(5)
         .build();
+
 
     let workshop_inst = Label::builder()
         .label("Workshop Destination: ")
