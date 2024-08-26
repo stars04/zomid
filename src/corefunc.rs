@@ -8,7 +8,7 @@ use std::str;
 //=====================================
 //=== Function for getting ModIds =====
 //=====================================
-
+//hello world
 pub fn idscollect(source: String) -> io::Result<String> {
     let mut text_file = File::open(source)?;
     let mut strbuf = Vec::new();
