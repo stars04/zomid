@@ -1,11 +1,11 @@
 #![windows_subsystem = "windows"]
 
 mod corefunc;
-use gdk4::Texture;
+use gdk4::{Display, Texture};
 use gtk::prelude::*;
 use gtk::{
-    Application, ApplicationWindow, Box, Button, CheckButton, DropDown, Entry, EntryBuffer, Grid,
-    Label, Picture, CssProvider, StyleContext,
+    Application, ApplicationWindow, Box, Button, CheckButton, CssProvider, DropDown, Entry,
+    EntryBuffer, Grid, Label, Picture,
 };
 use std::fs;
 use std::sync::{Arc, Mutex};
@@ -14,8 +14,20 @@ static USER_PATHS: Mutex<[String; 2]> = Mutex::new([String::new(), String::new()
 
 fn main() {
     let app = Application::builder().application_id("zomid").build();
+    app.connect_startup(|_| load_css());
     app.connect_activate(build_ui);
     app.run();
+}
+
+fn load_css() {
+    let provider = CssProvider::new();
+    provider.load_from_string(include_str!("style.css"));
+
+    gtk::style_context_add_provider_for_display(
+        &Display::default().expect("Could not connect to a display"),
+        &provider,
+        gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+    );
 }
 
 fn build_ui(app: &Application) {
@@ -45,7 +57,6 @@ fn build_ui(app: &Application) {
         .margin_start(5)
         .margin_end(5)
         .build();
-
 
     let workshop_inst = Label::builder()
         .label("Workshop Destination: ")
@@ -268,6 +279,7 @@ fn build_ui(app: &Application) {
         .margin_end(10)
         .build();
 
+    vbox.set_widget_name("vbox");
     vbox.append(&grid_0);
 
     pbox.append(&grid_1);

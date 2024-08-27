@@ -12,3 +12,7 @@ entry {
 	font-family: Verdana, sans-serif;
 	font-size: 14px;
 }
+
+box#vbox {
+  background-color: #032730;
+}
