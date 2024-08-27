@@ -1,105 +1,115 @@
 DropDown {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-  color: #ffffff;
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    color: #ffffff;
 }
 
 #instructs {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #ffffff;
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
 }
 
 #workshop_inst {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #ffffff
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
 }
 
 #workshop_dest {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #ffffff
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
 }
 
-
 #text_inst {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #ffffff
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
 }
 
 #text_dest {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #ffffff
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
 }
 
 #button_0 {
-	font-family: Verdana, sans-serif;
-	font-size: 16px;
-<<<<<<< HEAD
-  color: #ffffff
-=======
-    color: #ffffff;
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    border-color: #021b21;
+    border-width: 5px;
+    font-size: 16px;
+    color: #000000;
     background-color: #08596e;
->>>>>>> 000bf85c288a2c20b4c94e4c8e38401385b75d11
 }
 
 #button_1 {
-	font-family: Verdana, sans-serif;
-	font-size: 16px;
-  background-color: #ffffff
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    border-color: #021b21;
+    border-width: 5px;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 #button_2 {
-	font-family: Verdana, sans-serif;
-	font-size: 16px;
-  color: #ffffff
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #000000;
+    background-color: #08596e;
 }
 
 #work_confirm {
-  font-family: Verdana, sans-serif;
-  font-size:14px;
-  color: #ffffff;
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    color: #ffffff;
 }
 
 #text_confirm {
-  font-family: Verdana, sans-serif;
-  font-size:14px;
-  color: #ffffff;
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    color: #ffffff;
 }
 
 #enterbox {
-	font-family: Verdana, sans-serif;
-	font-size: 14px;
-<<<<<<< HEAD
-  color: #000000;
-  background-color: #ffffff;
-
+    font-family: Verdana, sans-serif;
+    font-size: 14px;
+    border-width: 5px;
+    border-color: #021b21;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 #pathselect {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  color: #ffffff;
-=======
+    font-family: Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
     color: #ffffff;
 }
 
 entry {
-	font-family: Verdana, sans-serif;
-	font-size: 14px;
+    font-family: Verdana, sans-serif;
+    font-size: 14px;
+    box-shadow: 0, 0, 0, 0;
     color: #030303;
->>>>>>> 000bf85c288a2c20b4c94e4c8e38401385b75d11
 }
 
 #vbox {
-  background-color: #032730;
+    background-color: #032730;
+    border-color: #000000;
+}
+
+#window {
+    background-color: #032730;
+    border-color: #000000;
 }

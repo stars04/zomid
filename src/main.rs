@@ -1,7 +1,7 @@
 #![windows_subsystem = "windows"]
 
 mod corefunc;
-use gdk4::{Display, Texture, RGBA};
+use gdk4::{Display, Texture};
 use gtk::prelude::*;
 use gtk::{
     Application, ApplicationWindow, Box, Button, CheckButton, CssProvider, DropDown, Entry,
@@ -111,7 +111,7 @@ fn build_ui(app: &Application) {
 
     text_dest.set_widget_name("text_dest");
 
-    let pathselect = DropDown::from_strings(&["Workshop Directory", "Text File Output  "]);
+    let pathselect = DropDown::from_strings(&["Workshop Folder", "TextFile Folder"]);
 
     pathselect.set_widget_name("pathselect");
 
