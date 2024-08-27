@@ -1,7 +1,7 @@
 #![windows_subsystem = "windows"]
 
 mod corefunc;
-use gdk4::{Display, Texture};
+use gdk4::{Display, Texture, RGBA};
 use gtk::prelude::*;
 use gtk::{
     Application, ApplicationWindow, Box, Button, CheckButton, CssProvider, DropDown, Entry,
@@ -31,10 +31,12 @@ fn load_css() {
 }
 
 fn build_ui(app: &Application) {
-    //Font Information
-    //keeps track of which dropdown selection is active
+    //=====================================================
+    //=   Initial variables needed by multiple widgets  ===
+    //=====================================================
+
     let drop_tracker = Arc::new(Mutex::new(0));
-    //keeps track of the state of the checkboxes
+
     let mut check_tracker = Arc::new(Mutex::new([false, false]));
 
     let mut is_ready = Arc::new(Mutex::new(false));
@@ -48,24 +50,33 @@ fn build_ui(app: &Application) {
         }
     };
 
+    //=======================================================
+    //=   Construction of Buttons/Enterbox/Dropdowns/etc  ===
+    //=======================================================
+
     let plogo = Picture::for_paintable(&ptex);
 
     let instructs = Label::builder()
         .label("Enter the path to your workshop directory \nExample: c:\\program files(x86)\\steam\\steamapps\\common\\workshop\\content\\108600".to_string())
+        .width_chars(80)
         .margin_top(5)
         .margin_bottom(5)
         .margin_start(5)
         .margin_end(5)
         .build();
 
+    instructs.set_widget_name("instructs");
+
     let workshop_inst = Label::builder()
         .label("Workshop Destination: ")
-        .width_chars(22)
+        .width_chars(20)
         .margin_top(5)
         .margin_bottom(5)
         .margin_start(5)
         .margin_end(5)
         .build();
+
+    workshop_inst.set_widget_name("workshop_inst");
 
     let workshop_dest = Label::builder()
         .label("")
@@ -76,6 +87,8 @@ fn build_ui(app: &Application) {
         .margin_end(5)
         .build();
 
+    workshop_dest.set_widget_name("workshop_dest");
+
     let text_inst = Label::builder()
         .label("TextFile Destination: ")
         .width_chars(22)
@@ -84,6 +97,8 @@ fn build_ui(app: &Application) {
         .margin_start(5)
         .margin_end(5)
         .build();
+
+    text_inst.set_widget_name("text_inst");
 
     let text_dest = Label::builder()
         .label("")
@@ -94,13 +109,23 @@ fn build_ui(app: &Application) {
         .margin_end(5)
         .build();
 
+    text_dest.set_widget_name("text_dest");
+
     let pathselect = DropDown::from_strings(&["Workshop Directory", "Text File Output  "]);
+
+    pathselect.set_widget_name("pathselect");
 
     let button_0 = Button::with_label("Exit");
 
+    button_0.set_widget_name("button_0");
+
     let button_1 = Button::with_label("Submit"); //Attach trigger to submit button
 
+    button_1.set_widget_name("button_1");
+
     let button_2 = Button::with_label("Close");
+
+    button_2.set_widget_name("button_2");
 
     let path_buffs = Arc::new(Mutex::new(vec![
         EntryBuffer::new(None::<String>),
@@ -115,9 +140,15 @@ fn build_ui(app: &Application) {
         .margin_end(5)
         .build();
 
+    enterbox.set_widget_name("enterbox");
+
     let work_confirm = CheckButton::with_label("Confirm Path");
 
+    work_confirm.set_widget_name("work_confirm");
+
     let text_confirm = CheckButton::with_label("Confirm Path");
+
+    text_confirm.set_widget_name("text_confirm");
 
     let information = Label::builder()
         .label(String::new())
@@ -127,8 +158,10 @@ fn build_ui(app: &Application) {
         .margin_end(5)
         .build();
 
+    information.set_widget_name("information");
+
     //=======================================
-    //=   ALL USER INTERACTION GOES HERE  ===
+    //=   User Interaction Section 1      ===
     //=======================================
 
     //Signal when dropdown is opened to toggle which instructions the user sees and what which path
@@ -232,9 +265,9 @@ fn build_ui(app: &Application) {
         }
     });
 
-    //=======================================
-    //=   Beginning to build the grid     ===
-    //=======================================
+    //==================================================================
+    //=  Begining to build grids and construct boxes and windows     ===
+    //==================================================================
 
     let grid_0 = Grid::new();
 
@@ -270,6 +303,9 @@ fn build_ui(app: &Application) {
         .margin_end(10)
         .build();
 
+    vbox.set_widget_name("vbox");
+    vbox.append(&grid_0);
+
     let pbox = Box::builder()
         .orientation(gtk::Orientation::Vertical)
         .spacing(5)
@@ -279,9 +315,7 @@ fn build_ui(app: &Application) {
         .margin_end(10)
         .build();
 
-    vbox.set_widget_name("vbox");
-    vbox.append(&grid_0);
-
+    pbox.set_widget_name("pbox");
     pbox.append(&grid_1);
 
     let window = ApplicationWindow::builder()
@@ -290,15 +324,24 @@ fn build_ui(app: &Application) {
         .child(&vbox)
         .build();
 
+    window.set_widget_name("window");
+    window.set_deletable(false);
+    window.set_visible(true);
+
     let progress = ApplicationWindow::builder()
         .title("ZoMID")
         .application(app)
         .child(&pbox)
         .build();
 
+    progress.set_widget_name("progress");
+
     window.set_deletable(false);
 
     window.set_visible(true);
+    //=======================================
+    //=   User Interaction Section 2      ===
+    //=======================================
 
     text_confirm.connect_toggled({
         let window = window.clone();
@@ -346,7 +389,7 @@ fn build_ui(app: &Application) {
         }
     });
 
-    //Below signal activates upon window visiblity USE FOR EXECUTION OF CORE LOGIC
+    //Below signal activates upon window visiblity USE FOR EXECUTION OF COREFUNC
     progress.connect_visible_notify({
         let grid_1 = grid_1.clone();
         let button_2 = button_2.clone();
