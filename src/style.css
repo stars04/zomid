@@ -1,16 +1,20 @@
 label {
 	font-family: Verdana, sans-serif;
 	font-size: 16px;
+    color: #ffffff;
+    background-color: #08596e;
 }
 
 button {
 	font-family: Verdana, sans-serif;
 	font-size: 14px;
+    color: #ffffff;
 }
 
 entry {
 	font-family: Verdana, sans-serif;
 	font-size: 14px;
+    color: #030303;
 }
 
 box#vbox {
