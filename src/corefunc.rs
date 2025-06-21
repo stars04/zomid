@@ -44,7 +44,7 @@ pub fn idscollect(source: String) -> io::Result<String> {
             break;
         }
     }
-    return Ok(content);
+    Ok(content)
 }
 
 //=====================================
@@ -58,7 +58,7 @@ pub fn pathcollect(source: &str) -> io::Result<Vec<String>> {
         let dirpath = dir.path().to_str().unwrap().to_string();
         paths.push(dirpath);
     }
-    return Ok(paths);
+    Ok(paths)
 }
 
 //===========================================
@@ -74,16 +74,21 @@ pub fn workidbuild(source: &str) -> io::Result<Vec<String>> {
             .to_str()
             .unwrap()
             .to_string()
-            .replace(&source, "");
+            .replace(source, "");
+        println!("{:?}", &wid);
         if wid.contains("/") {
             workids.push(wid.replace("/", ""));
+        } 
+        else if wid.contains("\\") {
+            workids.push(wid.replace("\\", ""));
+        } 
+        else {
+            workids.push(wid);
         }
 
-        if wid.contains("\\") {
-            workids.push(wid.replace("\\", ""));
-        }
     }
-    return Ok(workids);
+    println!("{:?}", &workids);
+    Ok(workids)
 }
 
 //=================================================================
@@ -96,7 +101,7 @@ pub fn modidpathcollecter(source: Vec<String>) -> std::io::Result<Vec<String>> {
     for val in source {
         let _ = collect_modids(&Path::new(&val), &mut modinfos);
     }
-    return Ok(modinfos);
+    Ok(modinfos)
 }
 
 pub fn collect_modids(path: &Path, modinfos: &mut Vec<String>) -> std::io::Result<()> {
@@ -125,7 +130,7 @@ pub fn mapnamecollect(source: Vec<String>) -> std::io::Result<Vec<String>> {
         collect_mapnames(&Path::new(&val), &mut mapnames)?;
     }
 
-    return Ok(mapnames);
+    Ok(mapnames)
 }
 
 pub fn collect_mapnames(path: &Path, mapnames: &mut Vec<String>) -> std::io::Result<()> {
@@ -134,10 +139,10 @@ pub fn collect_mapnames(path: &Path, mapnames: &mut Vec<String>) -> std::io::Res
             let entry = entry?;
             let path = entry.path();
             if path.is_dir() {
-                println!(
-                    "This is path.to_str().unwrap().contians('maps') ==> {:?}",
-                    path.to_str().unwrap().to_string() + "/"
-                );
+                //println!(
+                //    "This is path.to_str().unwrap().contians('maps') ==> {:?}",
+                //    path.to_str().unwrap().to_string() + "/"
+                //);
                 if path.to_str().unwrap().contains("maps") {
                     for sub_entry in fs::read_dir(&path)? {
                         let place: String = path.to_str().unwrap().to_string() + "/";
@@ -160,5 +165,5 @@ pub fn collect_mapnames(path: &Path, mapnames: &mut Vec<String>) -> std::io::Res
             }
         }
     }
-    return Ok(());
+    Ok(())
 }
